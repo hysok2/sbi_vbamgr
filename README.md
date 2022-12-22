@@ -14,16 +14,21 @@
 - PySimpleGUI
 - selenium
 ## 使い方
-まずは以下を実行し、仮想口座に資産を振り分けて下さい。
+```
+$ python3 sbi_vbamgr.py 'sbi-user-name' 'sbi-passwd' ./input_vba.toml ./output_vba.toml
+```
+引数は4つです。SBI証券のユーザーネーム(sbi-user-name)、パスワード(sbi-passwd)、入力する仮想口座情報のファイル(input_vba.toml)、仮想口座情報の出力先ファイル(output_vba.toml)の順です。
+### 初めての方は
+以下を実行し、仮想口座情報を作成して下さい。
 ```
 $ python3 sbi_vbamgr.py 'sbi-user-name' 'sbi-passwd' ./empty_vba.toml ./my_vba.toml
 ```
 仮想口座を編集する画面が出ます。'empty_vba.toml'には口座情報がないため、SBI口座にあるすべての資産を仮想口座に振り分ける必要があるためです。振り分けた結果は、'my_vba.toml'に出力されます。次回は、'my_vba.toml'を読み込んで下さい。
-- 初期画面：
+- 仮想口座を編集する画面 - 初期画面：
 ![仮想口座編集ウィンドウ](img/1_.png)
-- 空の仮想口座作成後
+- 仮想口座を編集する画面 - 空の仮想口座「Kabu」「Saiken」作成後
 ![仮想口座名入力後](img/2_.png)
-- 仮想口座に資産を振り分け後
+- 仮想口座を編集する画面 - 仮想口座に資産を振り分け後
 ![資産を振り分け後](img/3_.png)
 ## 完成度
 - SBI口座の「円建て株」、「円」、「ドル建て株」、「ドル建て債券」、「ドル」情報は読み込めます。他の資産も読み込めるといいなと思っていますが、テストしていないため可能かは不明です。
