@@ -4,10 +4,9 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
-import pandas as pd
 from bs4 import BeautifulSoup
+import pandas as pd
 import sys
-import re
 import toml
 import datetime
 import PySimpleGUI as sg
@@ -155,6 +154,8 @@ class virtual_accounts:
                     onecol.append([sg.Text(f'----------\n総額 : {summary[k].total//1} 円')])
                     assets_total+=round(summary[k].total)
                     layout.append([sg.Frame(k, onecol)])
+
+                layout.append([sg.Text("新規口座名 : "), sg.InputText(key="-bname-"),sg.Button('新規口座作成')])
                 
                 onecol = []
                 radio_dc = {}
@@ -171,15 +172,15 @@ class virtual_accounts:
                         oneline.append(sg.Text(': 分ける数量'))
                         oneline.append(sg.InputText(key='-amount-'))
                     onecol.append(oneline)
+                    if i==0:
+                        onecol.append([sg.Button('選択を反映')])
 
-                onecol.append([sg.Button('選択を反映')])
                 layout.append([sg.Frame('**差分**',onecol)])
                 
                 # layout.append([sg.Frame('総額',[[sg.Text(f'{assets_total} 円')]])])
-                layout.append([sg.Text("新規口座名 : "), sg.InputText(key="-bname-"),sg.Button('新規口座作成')])
                 layout.append([sg.Button('最初に戻す'),sg.Button('終了')])
 
-                window = sg.Window('差分を口座に振り分け', layout)
+                window = sg.Window('差分を仮想口座に振り分け', layout)
 
                 while True:
                     event, values = window.read()
@@ -300,6 +301,11 @@ def get_dollar_assets(driver):
 
 
 if __name__ == "__main__":
+
+    if (len(sys.argv)!=5):
+        print('コマンド引数のエラー')
+        print('python3 sbi_vbamgr.py sbi_user_id sbi_password input_vba_file output_vba_file')
+        exit()
     
     # load data in sbi
     ## chrome driverインスタンス生成
@@ -343,8 +349,7 @@ if __name__ == "__main__":
         # 差を特定して
         va.mk_and_classify_diff([ya,da])
         va.show_assets_summary([ya,da])
-        # 差を書き出す
-    
+    # 差を書き出す
     va.output_toml(output_vba)
         
 
