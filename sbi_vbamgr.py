@@ -26,7 +26,7 @@ class virtual_accounts:
         for i in range(len(self.assets_list[self.names.index(aname)])):
             if self.assets_list[self.names.index(aname)][i][0] == name:
                 self.assets_list[self.names.index(aname)][i]= \
-                    [name,str(float(self.assets_list[self.names.index(aname)][i][1])+num)]
+                    [name,str(round(float(self.assets_list[self.names.index(aname)][i][1])+num,2))]
                 return        
         self.assets_list[self.names.index(aname)].append([name,str(num)])
 
@@ -39,7 +39,7 @@ class virtual_accounts:
         for i in range(len(assets_list)):
             for j in range(len(assets_list[i])):
                 if assets_list[i][j][0] in dc:
-                    dc[assets_list[i][j][0]]+=float(assets_list[i][j][1])
+                    dc[assets_list[i][j][0]]=round(dc[assets_list[i][j][0]]+float(assets_list[i][j][1]),2)
                 else:
                     dc[assets_list[i][j][0]]=float(assets_list[i][j][1])
         return(dc)
@@ -127,7 +127,7 @@ class virtual_accounts:
             for k in dc_all_keys:
                 if (k in dc_va) and (k in dc_new):
                     if dc_new[k] != dc_va[k]:
-                        diff.append([k,dc_new[k]-dc_va[k]])
+                        diff.append([k,round(dc_new[k]-dc_va[k],2)])
                 elif (k in dc_va) and (not (k in dc_new)):
                     diff.append([k,-dc_va[k]])
                 elif (not (k in dc_va)) and (k in dc_new):
@@ -204,7 +204,7 @@ class virtual_accounts:
                                     self.add_asset(self.names[int(i)],diff[0][0],diff[0][1])
                                     del diff[0]
                                 elif int(i)==len(self.names) and values['-amount-']!='':
-                                    diff[0][1]-=float(values['-amount-'])
+                                    diff[0][1]=round(diff[0][1]-float(values['-amount-']),2)
                                     diff.append([diff[0][0],float(values['-amount-'])])
                                     window['-amount-'].Update('')
                                 break
