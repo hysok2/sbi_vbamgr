@@ -55,9 +55,20 @@ class virtual_accounts:
             if dc_input[k]!=dc_va[k]:
                 return(False)
         return(True)
+    
+    def remove_0_amnt_assets(self):
+        for i in range(len(self.assets_list)):
+            for j in reversed(range(len(self.assets_list[i]))):
+                if(float(self.assets_list[i][j][1])==0):
+                    del self.assets_list[i][j]
+
+        for i in reversed(range(len(self.assets_list))):
+            if(self.assets_list==[]):
+                del self.assets_list[i]
 
     def output_toml(self,file):
-        with open(file,"w") as f:
+        self.remove_0_amnt_assets()
+        with open(file,'w+') as f:
             dc = {
                 'date' : datetime.date.today(),
                 'vba' : {
@@ -71,13 +82,16 @@ class virtual_accounts:
         dc = {}
         dc_input = {}
         for i in range(len(assets_list)):
+            #print(assets_list[i].assets_list)
             dc_input.update(assets_list[i].mk_dict())
+
         for i in range(len(self.names)):
             a = assets()
             for j in range(len(self.assets_list[i])):
-                a.add(self.assets_list[i][j][0],self.assets_list[i][j][1], \
-                    round(dc_input[self.assets_list[i][j][0]][1] \
-                    *(float(self.assets_list[i][j][1])/dc_input[self.assets_list[i][j][0]][0])))
+                if self.assets_list[i][j][0] in dc_input:
+                    a.add(self.assets_list[i][j][0],self.assets_list[i][j][1], \
+                        round(dc_input[self.assets_list[i][j][0]][1] \
+                        *(float(self.assets_list[i][j][1])/dc_input[self.assets_list[i][j][0]][0])))
             dc[self.names[i]] = a
         return(dc)
 
@@ -349,7 +363,9 @@ if __name__ == "__main__":
         # 差を特定して
         va.mk_and_classify_diff([ya,da])
         va.show_assets_summary([ya,da])
+        # カレントディレクトリにバックアップ
+        va.output_toml(str(datetime.date.today()) + '.toml')
     # 差を書き出す
     va.output_toml(output_vba)
-        
+    
 
