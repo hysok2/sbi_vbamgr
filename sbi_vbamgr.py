@@ -1,9 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+
 from bs4 import BeautifulSoup
 import pandas as pd
 import sys
@@ -11,6 +12,7 @@ import toml
 import datetime
 import PySimpleGUI as sg
 import copy
+
 
 
 class virtual_accounts:
@@ -99,6 +101,7 @@ class virtual_accounts:
         summary = self.mk_assets_summary(assets_list)
 
         layout = []
+        column = []
         assets_total = 0
 
         for k in summary:
@@ -107,8 +110,9 @@ class virtual_accounts:
                 onecol.append([sg.Text(f'{summary[k].assets_list[i][0]} : {summary[k].assets_list[i][1]} : {summary[k].assets_list[i][2]} 円')])
             onecol.append([sg.Text(f'----------\n総額 : {summary[k].total//1} 円')])
             assets_total+=round(summary[k].total)
-            layout.append([sg.Frame(k, onecol)])
+            column.append([sg.Frame(k, onecol)])
         
+        layout.append([sg.Column(column, scrollable=True, vertical_scroll_only=True)])
         layout.append([sg.Frame('総額',[[sg.Text(f'{assets_total} 円')]])])
         layout.append([sg.Button('終了')])
 
@@ -159,6 +163,7 @@ class virtual_accounts:
                 summary = self.mk_assets_summary(assets_list)
 
                 layout = []
+                column = []
                 assets_total = 0
 
                 for k in summary:
@@ -167,8 +172,9 @@ class virtual_accounts:
                         onecol.append([sg.Text(f'{summary[k].assets_list[i][0]} : {summary[k].assets_list[i][1]} : {summary[k].assets_list[i][2]} 円')])
                     onecol.append([sg.Text(f'----------\n総額 : {summary[k].total//1} 円')])
                     assets_total+=round(summary[k].total)
-                    layout.append([sg.Frame(k, onecol)])
+                    column.append([sg.Frame(k, onecol)])
 
+                layout.append([sg.Column(column, scrollable=True, vertical_scroll_only=True)])
                 layout.append([sg.Text("新規口座名 : "), sg.InputText(key="-bname-"),sg.Button('新規口座作成')])
                 
                 onecol = []
@@ -267,7 +273,7 @@ def get_yen_assets(driver):
     yen_assets.add('現金(円)',yen,yen)
     
     yen_all_asset = float(driver.find_element(By.XPATH, \
-        "/html/body/div[1]/table/tbody/tr/td[1]/table/tbody/tr[2]/td/table[1]/tbody/tr/td/form/table[2]/tbody/tr[1]/td[2]/table[4]/tbody/tr/td[1]/table[4]/tbody/tr[8]/td[2]/div/b").text.replace(',',''))
+        "/html/body/div[1]/table/tbody/tr/td[1]/table/tbody/tr[2]/td/table[1]/tbody/tr/td/form/table[2]/tbody/tr[1]/td[2]/table[4]/tbody/tr/td[1]/table[4]/tbody/tr[9]/td[2]/div/b").text.replace(',',''))
 
     if (yen_assets.total != yen_all_asset):
         print("Error in get_yen_assets")
@@ -326,6 +332,7 @@ if __name__ == "__main__":
     options = Options()
     options.add_argument("-headless")
     options.add_argument("-no-sandbox")
+    #driver = webdriver.Chrome(options=options)
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     ## URL遷移
