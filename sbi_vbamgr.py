@@ -187,6 +187,8 @@ class virtual_accounts:
                     oneline=[]
                     oneline.append(sg.Text(f'{diff[i][0]} : {diff[i][1]} : '))
                     if i==0:
+                        onecol.append(oneline)
+                        oneline=[]
                         for item in radio_dc.items():
                             oneline.append(sg.Radio(item[1], key=f'{item[0]}+g{i}', group_id=f'g{i}'))
                         oneline.append(sg.Text(': 分ける数量'))
